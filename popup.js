@@ -1,43 +1,80 @@
-const DEFAULTS = { enabled: true, speed: 2.0 };
+const DEFAULTS = {
+  enabled: true,
+  activeRange: 'low',                                     // defaults
+  lowSpeed: 2.0,
+  highSpeed: 2.0,
+};
 
 const enabledEl = document.getElementById('enabled');
-const speedEl = document.getElementById('speed');
+const lowSpeedEl = document.getElementById('lowSpeed');
+const highSpeedEl = document.getElementById('highSpeed');
+const lowBlock = document.getElementById('lowBlock');
+const highBlock = document.getElementById('highBlock');
 const speedValueEl = document.getElementById('speedValue');
 const controlsEl = document.getElementById('controls');
 
-function render({ enabled, speed }) {
-  enabledEl.checked = enabled;
-  speedEl.value = speed;
-  speedEl.disabled = !enabled;
-  speedValueEl.textContent = Number(speed).toFixed(2);
-  controlsEl.classList.toggle('disabled', !enabled);
+let state = { ...DEFAULTS };
+
+function activeSpeed(s) {
+  return s.activeRange === 'high' ? s.highSpeed : s.lowSpeed;
 }
 
-async function broadcast(state) {
-  const tabs = await chrome.tabs.query({ url: '*://*.youtube.com/*' });
-  for (const tab of tabs) {
-    chrome.tabs.sendMessage(tab.id, { type: 'YT_SPEED_UPDATE', ...state })
-      .catch(() => { /*tab may not contain script ready yet, storage caches it*/ });
-  }
+function render(s) {
+  enabledEl.checked = s.enabled;
+  lowSpeedEl.value = s.lowSpeed;
+  highSpeedEl.value = s.highSpeed;
+  speedValueEl.textContent = Number(activeSpeed(s)).toFixed(2);
+
+  lowBlock.classList.toggle('inactive', s.activeRange !== 'low');
+  highBlock.classList.toggle('inactive', s.activeRange !== 'high');
+
+  controlsEl.classList.toggle('disabled', !s.enabled);
 }
 
 async function save(partial) {
-  const current = await chrome.storage.sync.get(DEFAULTS);
-  const next = { ...current, ...partial };
-  await chrome.storage.sync.set(next);
-  render(next);
-  broadcast(next);
+  state = { ...state, ...partial };
+  await chrome.storage.sync.set(state);
+  render(state);
 }
 
 (async () => {
-  const state = await chrome.storage.sync.get(DEFAULTS);
+  const stored = await chrome.storage.sync.get(DEFAULTS);
+  state = { ...DEFAULTS, ...stored };
   render(state);
 })();
 
 enabledEl.addEventListener('change', () => save({ enabled: enabledEl.checked }));
 
-speedEl.addEventListener('input', () => {
-  // update display without infinite write
-  speedValueEl.textContent = Number(speedEl.value).toFixed(2);
+                                                          // activates before the input starts tracking the drag
+function wireActivation(block, rangeName) {
+  block.addEventListener('pointerdown', () => {
+    if (state.activeRange !== rangeName) {
+      save({ activeRange: rangeName });
+      }
+  }, true);                                               // capture phase, before the range input handles it
+}
+wireActivation(lowBlock, 'low');
+wireActivation(highBlock, 'high');
+
+                                                          // update display without infinite write
+function wireLive(input, key) {
+  input.addEventListener('input', () => {
+    state[key] = parseFloat(input.value);
+    if (
+      (key === 'lowSpeed' && state.activeRange === 'low') ||
+      (key === 'highSpeed' && state.activeRange === 'high')
+    ) {
+      speedValueEl.textContent = Number(input.value).toFixed(2);
+    }
+  });
+}
+wireLive(lowSpeedEl, 'lowSpeed');
+wireLive(highSpeedEl, 'highSpeed');
+
+                                                          // commit when release
+lowSpeedEl.addEventListener('change', () => {
+  save({ lowSpeed: parseFloat(lowSpeedEl.value), activeRange: 'low' });
 });
-speedEl.addEventListener('change', () => save({ speed: parseFloat(speedEl.value) }));
+highSpeedEl.addEventListener('change', () => {
+  save({ highSpeed: parseFloat(highSpeedEl.value), activeRange: 'high' });
+});
