@@ -1,11 +1,22 @@
 (() => {
-  const DEFAULTS = { enabled: true, speed: 2.0 };
+  const DEFAULTS = {
+    enabled: true,
+    activeRange: 'low',
+    lowSpeed: 2.0,                                // Defaults
+    highSpeed: 2.0,
+  };
   let state = { ...DEFAULTS };
   let tracked = new WeakSet();
 
+                                                  // Experimental
+  function effectiveSpeed() {
+    if (!state.enabled) return 1.0;
+    return state.activeRange === 'high' ? state.highSpeed : state.lowSpeed;
+  }
+
   function applyTo(video) {
     if (!video) return;
-    const target = state.enabled ? state.speed : 1.0;
+    const target = effectiveSpeed();
     if (Math.abs(video.playbackRate - target) > 0.001) {
       video.playbackRate = target;
     }
@@ -27,33 +38,26 @@
     applyTo(video);
   }
 
-  // Watch for video elements being added/removed (SPA nav, ads, etc.)
+                                                  // Watch for video elements changing (SPA nav, ads, etc.)
   const mo = new MutationObserver(() => {
     document.querySelectorAll('video').forEach(track);
   });
   mo.observe(document.documentElement, { childList: true, subtree: true });
 
-  // Initial pass
+                                                  // Initial pass
   document.querySelectorAll('video').forEach(track);
 
-  // Listen for popup updates
-  chrome.runtime.onMessage.addListener((msg) => {
-    if (msg && msg.type === 'YT_SPEED_UPDATE') {
-      state = { enabled: !!msg.enabled, speed: Number(msg.speed) || 1.0 };
-      applyAll();
-    }
-  });
-
-  // Also pick up changes via storage (covers tabs that were closed/reopened
-  // and keeps multiple tabs in sync without needing a sendMessage round-trip)
+                                                  // Storage sync across popup and tabs
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== 'sync') return;
     if (changes.enabled) state.enabled = changes.enabled.newValue;
-    if (changes.speed) state.speed = changes.speed.newValue;
+    if (changes.activeRange) state.activeRange = changes.activeRange.newValue;
+    if (changes.lowSpeed) state.lowSpeed = changes.lowSpeed.newValue;
+    if (changes.highSpeed) state.highSpeed = changes.highSpeed.newValue;
     applyAll();
   });
 
-  // Load initial state from storage
+                                                  // Load initial state
   chrome.storage.sync.get(DEFAULTS, (s) => {
     state = { ...DEFAULTS, ...s };
     applyAll();
