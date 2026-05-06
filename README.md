@@ -35,7 +35,7 @@ So the content script just re-applies the rate every time those events fire, and
 
 ## Mentions
 
-Inspired by [dobval/youtube2x](https://github.com/dobval/youtube2x), script in which it hardcodes 2x playback on YouTube.\
+Inspired by [dobval/youtube2x](https://github.com/dobval/youtube2x), a script in which it hardcodes 2x playback on YouTube.\
 This extension aims to widen it, through an UI, a switch and an adjustable slider.
 
 ## License
