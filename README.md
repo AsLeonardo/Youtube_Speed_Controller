@@ -7,7 +7,7 @@ A Chromium extension that adds a popup to your toolbar with:
 
 When enabled, YouTube videos play at the chosen speed automatically. When disabled, playback returns to normal (`1.0x`). Settings sync across browsers through `chrome.storage.sync`.
 
-<video src="https://github.com/user-attachments/assets/1836fc0f-0a2d-4dd7-b013-6f6119c18f13" width="200" controls></video>
+<video src="https://github.com/user-attachments/assets/1912f862-6cdc-433d-a3d9-efab01287d7e" width="100%" controls></video>
 
 ## Install (unpacked, dev mode)
 
