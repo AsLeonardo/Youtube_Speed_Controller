@@ -3,7 +3,7 @@
 A Chromium extension that adds a popup to your toolbar with:
 
 - An **on/off** toggle
-- A **speed slider** from `0.5x` to `2.0x` (default: `2.0x`)
+- A **speed slider** from `0.1x` to `4.0x` (default: `2.0x`)
 
 When enabled, YouTube videos play at the chosen speed automatically. When disabled, playback returns to normal (`1.0x`). Settings sync across browsers through `chrome.storage.sync`.
 
@@ -33,7 +33,7 @@ So the content script just re-applies the rate every time those events fire, and
 
 ## Mentions
 
-Inspired by [dobval/youtube2x](https://github.com/dobval/youtube2x), script which hardcodes 2x playback on YouTube.\
+Inspired by [dobval/youtube2x](https://github.com/dobval/youtube2x), script in which it hardcodes 2x playback on YouTube.\
 This extension aims to widen it, through an UI, a switch and an adjustable slider.
 
 ## License
