@@ -16,7 +16,7 @@
     background: var(--bg);
     color: var(--fg);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    width: 240px;
+    width: 260px;
   }
   .wrap {
     padding: 14px 16px 16px;
@@ -40,7 +40,7 @@
     font-size: 13px;
   }
 
-  /* Toggle */
+                                    /*toggle*/
   .switch {
     position: relative;
     width: 38px;
@@ -87,11 +87,38 @@
     margin-left: 2px;
   }
 
+                                    /*slider blocks*/
+  .slider-block {
+    transition: opacity 0.18s;
+  }
+  .slider-block.inactive {
+    opacity: 0.4;
+  }
+  .slider-block .range-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+  }
+  .slider-block .range-header .badge {
+    color: var(--accent);
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+  .slider-block:not(.inactive) .range-header .badge {
+    opacity: 1;
+  }
+
                                     /*range*/
   input[type=range] {
     -webkit-appearance: none;
     width: 100%;
     background: transparent;
+    margin: 0;
   }
   input[type=range]:focus { outline: none; }
   input[type=range]::-webkit-slider-runnable-track {
@@ -108,9 +135,8 @@
     margin-top: -6px;
     cursor: pointer;
   }
-  input[type=range]:disabled::-webkit-slider-thumb {
+  .slider-block.inactive input[type=range]::-webkit-slider-thumb {
     background: var(--muted);
-    cursor: not-allowed;
   }
 
   .range-labels {
@@ -121,7 +147,14 @@
     margin-top: 4px;
   }
 
-  .disabled { opacity: 0.45; }
+  .disabled { opacity: 0.45; pointer-events: none; }
+
+  .divider {
+    height: 1px;
+    background: var(--track);
+    margin: 2px 0;
+    opacity: 0.5;
+  }
 </style>
 </head>
 <body>
@@ -140,9 +173,27 @@
       <div class="speed-display">
         <span id="speedValue">2.00</span><span class="x">x</span>
       </div>
-      <input type="range" id="speed" min="0.5" max="2.0" step="0.05" value="2.0" />
-      <div class="range-labels">
-        <span>0.5x</span><span>1.0x</span><span>1.5x</span><span>2.0x</span>
+
+      <div class="slider-block" id="lowBlock" data-range="low">
+        <div class="range-header">
+          <span>Normal</span><span class="badge">●</span>
+        </div>
+        <input type="range" id="lowSpeed" min="0.1" max="2.0" step="0.05" value="2.0" />
+        <div class="range-labels">
+          <span>0.1x</span><span>1.0x</span><span>2.0x</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="slider-block inactive" id="highBlock" data-range="high">
+        <div class="range-header">
+          <span>Turbo</span><span class="badge">●</span>
+        </div>
+        <input type="range" id="highSpeed" min="2.0" max="4.0" step="0.05" value="2.0" />
+        <div class="range-labels">
+          <span>2.0x</span><span>3.0x</span><span>4.0x</span>
+        </div>
       </div>
     </div>
   </div>
