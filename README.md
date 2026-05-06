@@ -16,20 +16,24 @@ When enabled, YouTube videos play at the chosen speed automatically. When disabl
 
 The icon will appear in your toolbar, click it to open the popup.
 
-## files
+## Files
 
-- `manifest.json` — MV3 manifest
-- `popup.html` / `popup.js` — toolbar popup, reads/writes settings
-- `content.js` — sets the playback rate, deals with YouTube's SPA nav
-- `icon.png` — icon
+| File           | Intent                                               |
+| -------------- | ---------------------------------------------------- |
+| `manifest.json`| MV3 manifest                                         |
+| `popup.html`   | toolbar popup, reads/writes settings                 |
+| `popup.js`     | toolbar popup, reads/writes settings                 |
+| `content.js`   | sets the playback rate, deals with YouTube's SPA nav |
+| `icon.png`     | icon                                                 |
 
-## notes
+## Notes
 
-YouTube resets `playbackRate` whenever it feels like it (on `play`, `loadeddata`, `ratechange`) and swaps out the `<video>` element entirely on SPA navigation. So the content script just re-applies the rate every time those events fire, and uses a `MutationObserver` to catch new video elements as they appear.
+YouTube resets `playbackRate` whenever it feels like it (on `play`, `loadeddata`, `ratechange`) and swaps out the `<video>` element entirely on SPA navigation.\
+So the content script just re-applies the rate every time those events fire, and uses a `MutationObserver` to catch new video elements as they appear.
 
-## Credit
+## Mentions
 
-Inspired by [dobval/youtube2x](https://github.com/dobval/youtube2x), script which hardcodes 2x playback on YouTube.
+Inspired by [dobval/youtube2x](https://github.com/dobval/youtube2x), script which hardcodes 2x playback on YouTube.\
 This extension aims to widen it, through an UI, a switch and an adjustable slider.
 
 ## License
