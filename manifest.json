@@ -23,6 +23,7 @@
     {
       "matches": ["*://*.youtube.com/*"],
       "js": ["content.js"],
+      "exclude_matches": ["*://music.youtube.com/*"],
       "run_at": "document_idle",
       "all_frames": true
     }
