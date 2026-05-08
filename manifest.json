@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YouTube Speed Controller",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "Toggle and adjust YouTube playback speed (0.5x – 2.0x) from a popup in the toolbar.",
   "permissions": ["storage", "scripting", "tabs"],
   "host_permissions": ["*://*.youtube.com/*"],
