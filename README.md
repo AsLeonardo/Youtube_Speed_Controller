@@ -40,4 +40,4 @@ This extension aims to widen it, through an UI, a switch and an adjustable slide
 
 ## License
 
-MIT
+[MIT](LICENSE)
