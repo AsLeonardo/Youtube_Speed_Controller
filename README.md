@@ -4,6 +4,7 @@ A Chromium extension that adds a popup to your toolbar with:
 
 - An **on/off** toggle
 - A **speed slider** from `0.1x` to `4.0x` (default: `2.0x`)
+- A **Turbo** speed slider from `2.0x` to `4.0x` (default: `2.0x`)
 
 When enabled, YouTube videos play at the chosen speed automatically. When disabled, playback returns to normal (`1.0x`). Settings sync across browsers through `chrome.storage.sync`.
 
@@ -20,13 +21,13 @@ The icon will appear in your toolbar, click it to open the popup.
 
 ## Files
 
-| File           | Intent                                               |
-| -------------- | ---------------------------------------------------- |
-| `manifest.json`| MV3 manifest                                         |
-| `popup.html`   | toolbar popup, reads/writes settings                 |
-| `popup.js`     | toolbar popup, reads/writes settings                 |
-| `content.js`   | sets the playback rate, deals with YouTube's SPA nav |
-| `icon.png`     | icon                                                 |
+| File           | Intent                                                      |
+| -------------- | ----------------------------------------------------------- |
+| `manifest.json`| MV3 manifest                                                |
+| `popup.html`   | Toolbar popup (toggle, sliders, speed display)              |
+| `popup.js`     | Popup logic, reads/writes settings via `chrome.storage.sync`|
+| `content.js`   | Sets the playback rate, deals with YouTube's SPA nav        |
+| `icon.png`     | Icon                                                        |
 
 ## Notes
 
